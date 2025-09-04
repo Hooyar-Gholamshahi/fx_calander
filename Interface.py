@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QTableView, QVBoxLayout, 
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 import os
 from dotenv import load_dotenv, find_dotenv
-from larg_data_catcher import cursor
+from larg_db import cursor
 
 
 load_dotenv(find_dotenv())

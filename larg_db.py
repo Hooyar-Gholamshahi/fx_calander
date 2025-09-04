@@ -30,9 +30,9 @@ country_map = { # currency_map
     "CAD": "CAD", "CA": "CAD",#
     "CHF": "CHF", "CH": "CHF", #
     "CNY": "CNY", "CN": "CNY", #
-    "EUR": "EUR", "DE": "EUR",# "EU" : "EU"
+    "EUR": "EUR", "DE": "EUR", 
     "FR" : "EUR", "IT": "EUR",
-    "ES": "EUR",
+    "ES": "EUR", "EU" : "EUR",
     "AUD":"AUD" , "AU" : "AUD",
     "NZD": "NZD", "NZ": "NZD",#
     "GBP": "GBP", "GB": "GBP",
@@ -82,17 +82,17 @@ rc_start = time.time()
 
 
 collection.create_index([
-    ("currencyCode", 1),
     ("volatility", 1),
+    ("currencyCode", 1),
     ("dateUtc", 1),
 ])
 
 
 query = {}
-if country:  
-    query["currencyCode"] = {"$in": country}
 if volatilities:  
     query["volatility"] = {"$in": volatilities}
+if country:  
+    query["currencyCode"] = {"$in": country}
 if start and end:
     query["dateUtc"] = {"$gte": start, "$lte": end}
 
@@ -102,10 +102,11 @@ if start and end:
 cursor = collection.find(query , {
                                   "dateUtc": 1,
                                   "name" : 1,
-                                  "currencyCode": 1,
                                   "volatility": 1,
+                                  "currencyCode": 1,
                                   "_id": 0
-                                  })
+                                  }).sort("dateUtc" , -1)
+cursor = list(cursor)
 count = collection.count_documents(query)
 
 rc_end = time.time()
@@ -120,10 +121,3 @@ print("matched docs: ",count)
 print("with index : " , rc_end-rc_start)
 print(start)
 print(end)
-
-
-
-
-
-
-
